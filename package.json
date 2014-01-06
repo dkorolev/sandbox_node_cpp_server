@@ -1,8 +1,12 @@
 {
-    "name": "sandbox_node_cpp_server",
-    "description": "sandbox_node_cpp_server",
-    "private": true,
-    "dependencies": {
-        "express": "*"
-    }
+   "name": "sandbox_node_cpp_server",
+   "description": "sandbox_node_cpp_server",
+   "private": true,
+   "dependencies": {
+      "underscore": "*",
+      "step": "*",
+      "express": "*",
+      "thrift": "*",
+      "node-int64": "*"
+   }
 }
