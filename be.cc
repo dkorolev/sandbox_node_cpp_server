@@ -11,6 +11,10 @@
 #include <thrift/transport/TServerSocket.h>
 #include <thrift/transport/TBufferTransports.h>
 
+#include <gflags/gflags.h>
+
+DEFINE_int32(port, 9090, "Port to use."); 
+
 uint64_t js_date_now() {
   return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }
@@ -52,11 +56,13 @@ class Service : virtual public SandboxServiceIf {
   std::vector<std::tuple<std::string, std::string, uint64_t> > messages_;
 };
 
-int main() {
-  const int port = 9090;
+int main(int argc, char** argv) {
+  if (!google::ParseCommandLineFlags(&argc, &argv, true)) {
+    return -1;
+  }
   boost::shared_ptr<Service> handler(new Service());
   boost::shared_ptr<TProcessor> processor(new SandboxServiceProcessor(handler));
-  boost::shared_ptr<TServerTransport> serverTransport(new TServerSocket(port));
+  boost::shared_ptr<TServerTransport> serverTransport(new TServerSocket(FLAGS_port));
   boost::shared_ptr<TTransportFactory> transportFactory(new TBufferedTransportFactory());
   boost::shared_ptr<TProtocolFactory> protocolFactory(new TBinaryProtocolFactory());
   TSimpleServer(processor, serverTransport, transportFactory, protocolFactory).serve();

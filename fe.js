@@ -14,7 +14,7 @@ process.on('uncaughtException', function(error) {
     process.exit(1);
 });
 
-var connection = thrift.createConnection('localhost', process.env.SERVICE_PORT || 9090);
+var connection = thrift.createConnection(process.env.BACKEND_HOST || 'localhost', process.env.BACKEND_PORT || 9090);
 
 connection.on('error', function(error) {
     console.error(error);

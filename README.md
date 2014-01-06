@@ -14,4 +14,10 @@ A C++ backend server. Receives messages.
 
 # Prerequisites
 
-Tested on Ubuntu 12.04 with Thrift 0.9.1 installed.
+Tested on Ubuntu 12.04.
+
+Thrift 0.9.1 installed manually. Apart from it:
+
+```
+sudo apt-get install boost libgflags-dev
+```

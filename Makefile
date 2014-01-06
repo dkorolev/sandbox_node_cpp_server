@@ -8,7 +8,7 @@ gen-cpp/OK: service.thrift
 	echo OK >$@
 
 be: be.cc gen-cpp/OK
-	${CC} -o $@ $< gen-cpp/*.o -static -lthrift
+	${CC} -o $@ $< gen-cpp/*.o -static -lthrift -lgflags -lpthread
 
 node_modules: package.json
 	npm install
