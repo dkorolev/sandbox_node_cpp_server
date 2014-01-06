@@ -1,4 +1,7 @@
-sandbox_node_cpp_server
-=======================
+# sandbox_node_cpp_server
 
-Two in one: a C++ server exposing Thrift API + a node.js frontend to it. 
+Two in one: a C++ server exposing Thrift API + a node.js frontend to it.
+
+## fe.js
+
+A node.js server.

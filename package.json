@@ -1,0 +1,8 @@
+{
+    "name": "sandbox_node_cpp_server",
+    "description": "sandbox_node_cpp_server",
+    "private": true,
+    "dependencies": {
+        "express": "*"
+    }
+}
