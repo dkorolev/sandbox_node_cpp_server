@@ -55,7 +55,7 @@ app.post('/', function(request, response) {
                 message.ms = new Int64(Date.now());
                 message.user = e.user;
                 message.message = e.message;
-                client.post_message(message, function(error, data) {
+                client.api_post_message(message, function(error, data) {
                     if (error) {
                         console.log(error);
                         process.exit(1);
@@ -82,19 +82,38 @@ var prefix_url = '/api/';
 _.each(_.functions(client), function(name) {
     if (name.substr(0, prefix_rpc.length) === prefix_rpc) {
         app.get(prefix_url + name.substr(prefix_rpc.length), function(request, response) {
+            var message = null;
+            if (request.hasOwnProperty('query') && _.isObject(request.query) && request.query.hasOwnProperty('_') && _.isString(request.query._) && request.query._ !== '') {
+                var input_type = request.query._;
+                var input_params = {};
+                for (var i in request.query) {
+                    if (i !== '_') {
+                        input_params[i] = request.query[i];
+                    }
+                }
+                message = new service_types[input_type]();
+                for (var i in input_params) {
+                    message[i] = input_params[i];
+                }
+            }
             var result = {};
             step(
                 function() {
                     var self = this;
-                    client[name](function(error, data) {
-                        if (error) {
-                            console.log(error);
-                            process.exit(1);
-                        } else {
-                            result = data;
-                            self();
-                        }
-                    });
+                    var callback = function(error, data) {
+                          if (error) {
+                              console.log(error);
+                              process.exit(1);
+                          } else {
+                              result = data;
+                              self();
+                          }
+                      };
+                    if (message) {
+                      client[name](message, callback);
+                    } else {
+                      client[name](callback);
+                    }
                 },
                 function() {
                     response.format({

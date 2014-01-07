@@ -30,7 +30,7 @@ class Service : virtual public SandboxServiceIf {
  public:
   Service() : start_time_ms_(js_date_now()) {
   }
-  void post_message(const MessageToPost& message) {
+  void api_post_message(const MessageToPost& message) {
     std::cout << message.user << ": " << message.message << " (" << js_date_now() - message.ms << "ms)." << std::endl;
     {
       std::lock_guard<std::mutex> lock(mutex_);
@@ -40,14 +40,31 @@ class Service : virtual public SandboxServiceIf {
   void api_status(APIStatus& status) {
     status.status = boost::str(boost::format("Live, uptime %.0lf seconds.") % (0.001 * (js_date_now() - start_time_ms_)));
   }
-  void api_log(Log& overall_stats) {
+  void api_messages_log(Log& log) {
+    const uint64_t now = js_date_now();
     std::lock_guard<std::mutex> lock(mutex_);
-    overall_stats.total = messages_.size();
-    overall_stats.messages.resize(messages_.size());
+    log.total = messages_.size();
+    log.messages.resize(messages_.size());
     for (size_t i = 0; i < messages_.size(); ++i) {
       const auto& m = messages_[i];
-      overall_stats.messages[i] = boost::str(boost::format("%s: %s (%.0lf seconds ago).") % std::get<0>(m) % std::get<1>(m) % (0.001 * (js_date_now() - std::get<2>(m))));
+      log.messages[i] = boost::str(boost::format("%s: %s (%.0lf seconds ago).") % std::get<0>(m) % std::get<1>(m) % (0.001 * (now - std::get<2>(m))));
     }
+  }
+  void api_recent_messages_log(Log& recent_log, const RecentMessagesLogParams& params) {
+    const uint64_t now = js_date_now();
+    std::lock_guard<std::mutex> lock(mutex_);
+    recent_log.messages.clear();
+    const uint64_t cutoff_ms = static_cast<int64_t>(now - 1000.0 * params.seconds); 
+    for (size_t i = 0; i < messages_.size(); ++i) {
+      const auto& m = messages_[i];
+      if (std::get<2>(m) >= cutoff_ms) {
+        recent_log.messages.push_back(boost::str(boost::format("%s: %s (%.0lf seconds ago).") % std::get<0>(m) % std::get<1>(m) % (0.001 * (now - std::get<2>(m)))));
+      }
+    }
+    recent_log.total = recent_log.messages.size();
+  }
+  void api_add(AddResult& result, const api::AddArguments& arguments) {
+    result.sum = arguments.left_hand_side + arguments.right_hand_side;
   }
 
  private:
