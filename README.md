@@ -19,5 +19,5 @@ Tested on Ubuntu 12.04.
 Thrift 0.9.1 installed manually. Apart from it:
 
 ```
-sudo apt-get install boost libgflags-dev
+sudo apt-get install libboost-dev libgflags-dev
 ```
