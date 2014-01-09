@@ -80,7 +80,7 @@ If C++ compilation fails with the following error:
 
 then make sure you are using g++ version 4.7 or above. (Just commenting out that static_assert would work, but the backend would have no clue about current time.)
 
-If Boost installation with apt-get is not working out, install it locally.
+If Boost installation with apt-get is not working out, download and install it manually.
 
 ```
 # Install Boost manually. Takes a while.
