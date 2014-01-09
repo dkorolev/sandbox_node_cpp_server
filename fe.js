@@ -121,7 +121,7 @@ _.each(_.functions(client), function(name) {
                             response.send(JSON.stringify(result));
                         },
                         html: function() {
-                            // Populate each endpoint URL with an corresponding HTML tag for easier browsing.
+                            // Populate each endpoint URL with a corresponding HTML tag for easier browsing.
                             function dfs(o) {
                                 for (var i in o) {
                                     if (o.hasOwnProperty(i)) {
