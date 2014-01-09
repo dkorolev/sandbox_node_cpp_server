@@ -1,4 +1,4 @@
-CC=g++ --std=c++11
+CC=g++ -std=c++11
 
 all: be gen-cpp/OK gen-nodejs/OK node_modules/OK
 
